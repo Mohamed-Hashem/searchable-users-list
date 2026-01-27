@@ -2,7 +2,7 @@
 
 A React application implementing a high-performance searchable list with 10,000+ items, featuring custom hooks for debouncing and caching, list virtualization, and progressive loading.
 
-🔗 **[Live Demo](https://searchable-list-zeta.vercel.app/)** | 📦 **[GitHub Repository](https://github.com/Mohamed-Hashem/searchable-users-list)** | 🔗 **[Dataset Live](https://mohamed-hashem.github.io/searchable-user-list-db/api.json)** | 📊 **[Dataset Repository](https://github.com/Mohamed-Hashem/searchable-user-list-db)**
+🔗 **[Live Demo](https://searchable-users-list.vercel.app/)** | 📦 **[GitHub Repository](https://github.com/Mohamed-Hashem/searchable-users-list)** | 🔗 **[Dataset Live](https://mohamed-hashem.github.io/searchable-user-list-db/api.json)** | 📊 **[Dataset Repository](https://github.com/Mohamed-Hashem/searchable-user-list-db)**
 
 ---
 
@@ -79,7 +79,7 @@ npm run dev
 
 ## Links
 
-- **Live Demo**: [https://searchable-list-zeta.vercel.app/](https://searchable-list-zeta.vercel.app/)
+- **Live Demo**: [https://searchable-users-list.vercel.app/](https://searchable-users-list.vercel.app/)
 - **Project Repository**: [https://github.com/Mohamed-Hashem/searchable-users-list](https://github.com/Mohamed-Hashem/searchable-users-list)
 
 ## API
