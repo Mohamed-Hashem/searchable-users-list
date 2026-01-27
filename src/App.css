@@ -1,0 +1,49 @@
+:root {
+    --color-primary: rgb(40, 40, 250);
+    --color-primary-hover: rgba(0, 0, 255, 0.5);
+    --color-text: #212121;
+    --color-text-secondary: #6b7280;
+    --color-text-muted: #aaa;
+    --color-border: #e5e5e5;
+    --color-background: #ffffff;
+    --color-background-page: #f3f3f3;
+    --color-error: red;
+    --color-highlight: rgb(255, 200, 0);
+    --font-family: "Segoe UI", system-ui, sans-serif;
+    --border-radius: 8px;
+    --border-radius-lg: 12px;
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+    --transition-fast: 0.15s ease;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--color-background-page);
+    font-family: var(--font-family);
+    min-height: 100vh;
+    height: 100vh;
+}
+
+#root {
+    min-height: 100vh;
+    height: 100vh;
+    display: flex;
+}
+
+.app {
+    padding: 20px;
+    flex: 1;
+    display: flex;
+    min-height: 0;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}

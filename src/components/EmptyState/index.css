@@ -1,0 +1,16 @@
+.emptyState {
+    padding: 48px 16px;
+    text-align: center;
+}
+
+.emptyTitle {
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 8px;
+    color: var(--color-text-secondary);
+}
+
+.emptyMessage {
+    font-size: 14px;
+    color: var(--color-text-muted);
+}
