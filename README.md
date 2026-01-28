@@ -38,6 +38,17 @@ A React application implementing a high-performance searchable list with 10,000+
 - Case-insensitive filtering with highlighted matched text
 - Loading, error, and refetch UI states
 
+## Accessibility
+
+This project is built with accessibility in mind:
+
+- **Semantic HTML**: Proper use of headings, lists, and landmarks
+- **Keyboard Navigation**: Full keyboard support for all interactive elements
+- **Screen Reader Support**: ARIA labels and live regions for dynamic content
+- **Focus Management**: Clear focus indicators and logical tab order
+- **Color Contrast**: Text meets WCAG AA contrast requirements
+- **Responsive Design**: Works across different screen sizes and zoom levels
+
 ## Tech Stack
 
 - **React 19** - Latest React with hooks
