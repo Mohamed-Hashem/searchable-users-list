@@ -3,16 +3,17 @@ import "./index.css";
 
 const SearchInput = ({ value, onChange, onClear, autoFocus = false }) => {
     return (
-        <div className="searchInputContainer">
+        <div className="searchInputContainer" role="search">
             <div className="searchInputWrapper">
                 <input
-                    type="text"
+                    type="search"
                     placeholder="Search users by name"
                     value={value}
                     onChange={onChange}
                     className="searchInput"
                     maxLength={MAX_SEARCH_LENGTH}
                     autoFocus={autoFocus}
+                    aria-label="Search users by name"
                 />
                 {value && (
                     <button

@@ -107,7 +107,7 @@ const SearchableList = () => {
     };
 
     return (
-        <div className="searchableListContainer">
+        <main className="searchableListContainer" aria-label="Searchable user list application">
             <SearchHeader
                 displayedCount={displayedUsers.length}
                 totalCount={filteredUsers.length}
@@ -118,7 +118,7 @@ const SearchableList = () => {
             <SearchInput value={searchQuery} onChange={handleSearchChange} onClear={handleClearSearch} autoFocus />
 
             {renderContent()}
-        </div>
+        </main>
     );
 };
 

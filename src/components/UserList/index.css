@@ -9,6 +9,11 @@
     scrollbar-gutter: stable;
 }
 
+.userListContainer:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: -2px;
+}
+
 .userListContainer.empty {
     height: auto;
     min-height: 200px;

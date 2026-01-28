@@ -6,7 +6,7 @@ const SearchHeader = ({ displayedCount = 0, totalCount = 0, isLoading = false, o
             <div className="searchHeaderContent">
                 <h1 className="searchHeaderTitle">Searchable User List</h1>
                 <div className="searchHeaderActions">
-                    <span className="searchHeaderCount">
+                    <span className="searchHeaderCount" role="status" aria-live="polite">
                         <strong>{displayedCount.toLocaleString()}</strong> of{" "}
                         <strong>{totalCount.toLocaleString()}</strong> Results
                     </span>

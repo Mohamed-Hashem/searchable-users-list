@@ -2,12 +2,12 @@
     --color-primary: rgb(40, 40, 250);
     --color-primary-hover: rgba(0, 0, 255, 0.5);
     --color-text: #212121;
-    --color-text-secondary: #6b7280;
-    --color-text-muted: #aaa;
+    --color-text-secondary: #545454;
+    --color-text-muted: #767676;
     --color-border: #e5e5e5;
     --color-background: #ffffff;
     --color-background-page: #f3f3f3;
-    --color-error: red;
+    --color-error: #ff0000cc;
     --color-highlight: rgb(255, 200, 0);
     --font-family: "Segoe UI", system-ui, sans-serif;
     --border-radius: 8px;

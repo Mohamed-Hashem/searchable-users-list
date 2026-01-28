@@ -7,13 +7,17 @@ const UserItem = React.memo(({ user, searchQuery }) => {
     const fullName = getFullName(user);
 
     return (
-        <div className="userItem">
+        <article className="userItem" aria-label={`User: ${fullName}`}>
             <div className="userName">
-                <span className="userId">#{user.id}</span>
+                <span className="userId" aria-label={`User ID ${user.id}`}>
+                    #{user.id}
+                </span>
                 <HighlightText text={fullName} highlight={searchQuery} />
             </div>
-            <div className="userEmail">{user.email}</div>
-        </div>
+            <div className="userEmail" aria-label={`Email: ${user.email}`}>
+                {user.email}
+            </div>
+        </article>
     );
 });
 

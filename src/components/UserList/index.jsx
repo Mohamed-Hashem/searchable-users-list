@@ -76,14 +76,21 @@ const UserList = forwardRef(({ users, searchQuery, hasMore = false, isLoadingMor
 
     if (users.length === 0) {
         return (
-            <div className="userListContainer empty">
+            <div className="userListContainer empty" role="region" aria-label="User list">
                 <EmptyState />
             </div>
         );
     }
 
     return (
-        <div className="userListContainer" ref={containerRef} onScroll={handleScroll}>
+        <div
+            className="userListContainer"
+            ref={containerRef}
+            onScroll={handleScroll}
+            role="region"
+            aria-label="User list"
+            tabIndex={0}
+        >
             <div className="userListScrollContent" style={{ height: `${totalHeight}px`, position: "relative" }}>
                 {visibleUsers.map((user) => (
                     <div
@@ -101,8 +108,8 @@ const UserList = forwardRef(({ users, searchQuery, hasMore = false, isLoadingMor
             </div>
 
             {isLoadingMore && (
-                <div className="loadingMoreIndicator">
-                    <span className="loadingMoreSpinner"></span>
+                <div className="loadingMoreIndicator" role="status" aria-live="polite">
+                    <span className="loadingMoreSpinner" aria-hidden="true"></span>
                     Loading more...
                 </div>
             )}

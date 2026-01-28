@@ -2,8 +2,8 @@ import "./index.css";
 
 const LoadingState = () => {
     return (
-        <div className="loadingState">
-            <div className="loadingSpinner"></div>
+        <div className="loadingState" role="status" aria-live="polite" aria-busy="true">
+            <div className="loadingSpinner" aria-hidden="true"></div>
             <div className="loadingText">Loading Users...</div>
         </div>
     );
