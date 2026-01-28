@@ -13,5 +13,6 @@ export const ITEM_HEIGHT = 72;
 export const VISIBLE_HEIGHT = 600;
 
 export const BUFFER = 5;
+export const SCROLL_THROTTLE_DELAY = 16;
 
 export const LOAD_MORE_THRESHOLD = 100;

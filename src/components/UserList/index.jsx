@@ -1,7 +1,8 @@
 import { useState, useMemo, useCallback, useRef, useImperativeHandle, forwardRef, useEffect } from "react";
 import UserItem from "../UserItem";
 import EmptyState from "../EmptyState";
-import { ITEM_HEIGHT, VISIBLE_HEIGHT, BUFFER, LOAD_MORE_THRESHOLD } from "../../constants";
+import useThrottle from "../../hooks/useThrottle";
+import { ITEM_HEIGHT, VISIBLE_HEIGHT, BUFFER, LOAD_MORE_THRESHOLD, SCROLL_THROTTLE_DELAY } from "../../constants";
 import "./index.css";
 
 const UserList = forwardRef(({ users, searchQuery, hasMore = false, isLoadingMore = false, onLoadMore }, ref) => {
@@ -19,19 +20,28 @@ const UserList = forwardRef(({ users, searchQuery, hasMore = false, isLoadingMor
     }));
 
     // Track scroll position for virtualization + Load more detection
-    const handleScroll = useCallback(
-        (e) => {
-            const { scrollTop: newScrollTop, scrollHeight, clientHeight } = e.target;
-            setScrollTop(newScrollTop);
+    const handleScrollUpdate = useCallback(
+        (scrollTop, scrollHeight, clientHeight) => {
+            setScrollTop(scrollTop);
 
             if (hasMore && onLoadMore && !isLoadingMore) {
-                const distanceFromBottom = scrollHeight - newScrollTop - clientHeight;
+                const distanceFromBottom = scrollHeight - scrollTop - clientHeight;
                 if (distanceFromBottom < LOAD_MORE_THRESHOLD) {
                     onLoadMore();
                 }
             }
         },
         [hasMore, onLoadMore, isLoadingMore]
+    );
+
+    const throttledScrollUpdate = useThrottle(handleScrollUpdate, SCROLL_THROTTLE_DELAY);
+
+    const handleScroll = useCallback(
+        (e) => {
+            const { scrollTop: newScrollTop, scrollHeight, clientHeight } = e.target;
+            throttledScrollUpdate(newScrollTop, scrollHeight, clientHeight);
+        },
+        [throttledScrollUpdate]
     );
 
     useEffect(() => {

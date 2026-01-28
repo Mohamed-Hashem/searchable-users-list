@@ -62,6 +62,7 @@ src/
 │   └── index.js             # Configuration values
 ├── hooks/
 │   ├── useDebounce.js       # Custom debounce hook
+│   ├── useThrottle.js       # Custom throttle hook for scroll
 │   └── useFetchWithCache.js # Custom fetch + cache hook
 ├── utils/
 │   └── index.js             # Utility functions
@@ -178,6 +179,52 @@ const filteredUsers = useMemo(() => {
 - Prevents redundant calculations on unrelated state changes
 - Stable reference prevents downstream re-renders
 
+### Decision 5: Throttled Scroll Handler
+
+**Problem**: Scroll events fire rapidly (100+ times/second), causing excessive re-renders during virtualization.
+
+**Solution**: Custom `useThrottle` hook limits scroll updates to ~60fps.
+
+```javascript
+const useThrottle = (callback, delay) => {
+    const lastCallRef = useRef(0);
+    const lastArgsRef = useRef(null);
+    const timeoutRef = useRef(null);
+
+    return useCallback(
+        (...args) => {
+            const now = Date.now();
+            const timeSinceLastCall = now - lastCallRef.current;
+
+            lastArgsRef.current = args;
+
+            if (timeSinceLastCall >= delay) {
+                lastCallRef.current = now;
+                callback(...args);
+            } else if (!timeoutRef.current) {
+                const remainingTime = delay - timeSinceLastCall;
+                timeoutRef.current = setTimeout(() => {
+                    lastCallRef.current = Date.now();
+                    callback(...lastArgsRef.current);
+                    timeoutRef.current = null;
+                }, remainingTime);
+            }
+        },
+        [callback, delay]
+    );
+};
+
+// Usage in UserList
+const throttledScrollUpdate = useThrottle(handleScrollUpdate, 16);
+```
+
+**Why this approach**:
+
+- Limits scroll handler execution to ~60 calls/second (matching display refresh rate)
+- Reduces state updates and re-renders during fast scrolling
+- Trailing call ensures final scroll position is always captured
+- No external libraries required
+
 ---
 
 ## useFetchWithCache - Caching Technique
@@ -258,6 +305,7 @@ const refetch = useCallback(() => {
 | Constant                | Value | Purpose                              |
 | ----------------------- | ----- | ------------------------------------ |
 | `DEBOUNCE_DELAY`        | 300ms | Delay before filtering               |
+| `SCROLL_THROTTLE_DELAY` | 16ms  | Scroll throttle interval             |
 | `INITIAL_DISPLAY_COUNT` | 20    | Items on first load                  |
 | `LOAD_MORE_COUNT`       | 20    | Items per scroll load                |
 | `ITEM_HEIGHT`           | 72px  | Row height for virtualization        |
@@ -274,6 +322,7 @@ const refetch = useCallback(() => {
 | Typing Lag            | 15-30ms/keystroke    | 0ms               |
 | DOM Nodes             | 10,000               | ~10               |
 | Re-renders per Search | 50+                  | 5                 |
+| Scroll Updates/sec    | 100+                 | ~60 (throttled)   |
 | Cached API Load       | ~200ms               | 0ms               |
 
 ---
