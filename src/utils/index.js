@@ -13,3 +13,7 @@ export const getFullName = (user) => {
     if (user.firstName && user.lastName) return `${user.firstName} ${user.lastName}`;
     return user.firstName || user.lastName || "";
 };
+
+export const escapeRegExp = (value = "") => {
+    return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+};

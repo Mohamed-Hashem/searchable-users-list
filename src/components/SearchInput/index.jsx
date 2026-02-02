@@ -17,6 +17,7 @@ const SearchInput = ({ value, onChange, onClear, autoFocus = false }) => {
                 />
                 {value && (
                     <button
+                        type="button"
                         onClick={onClear}
                         className="searchClearButton"
                         title="Clear search"

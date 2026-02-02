@@ -31,6 +31,14 @@ const SearchableList = () => {
         }
     }, []);
 
+    useEffect(() => {
+        resetDisplayState();
+
+        if (listRef.current) {
+            listRef.current.scrollToTop();
+        }
+    }, [debouncedQuery, resetDisplayState]);
+
     const filteredUsers = useMemo(() => {
         const trimmedQuery = debouncedQuery.trim();
         if (!trimmedQuery) return allUsers;
@@ -46,18 +54,13 @@ const SearchableList = () => {
 
     const hasMore = displayCount < filteredUsers.length;
 
-    const handleSearchChange = useCallback(
-        (e) => {
-            setSearchQuery(e.target.value);
-            resetDisplayState();
-        },
-        [resetDisplayState]
-    );
+    const handleSearchChange = useCallback((e) => {
+        setSearchQuery(e.target.value);
+    }, []);
 
     const handleClearSearch = useCallback(() => {
         setSearchQuery("");
-        resetDisplayState();
-    }, [resetDisplayState]);
+    }, []);
 
     const handleLoadMore = useCallback(() => {
         if (isLoadingMore || !hasMore) return;

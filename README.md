@@ -38,15 +38,35 @@ A React application implementing a high-performance searchable list with 10,000+
 - Case-insensitive filtering with highlighted matched text
 - Loading, error, and refetch UI states
 
+## Recent Improvements
+
+- **Search stability**: Display count resets in sync with the debounced query to prevent empty list flicker while editing search text.
+- **Safer highlighting**: Escapes search text before building the highlight matcher to avoid regex-related issues.
+- **Fetch robustness**: Prevents stale requests from overwriting newer data and handles empty URLs safely.
+- **Button safety**: Explicit `type="button"` on non-submit buttons to avoid accidental form submits.
+- **Throttle stability**: Uses ref pattern to avoid stale callback closures in the throttle hook.
+- **DevTools support**: Added `displayName` to all memoized and forwarded-ref components for easier debugging.
+
 ## Accessibility
 
 This project is built with accessibility in mind:
 
-- **Semantic HTML**: Proper use of headings, lists, and landmarks
-- **Keyboard Navigation**: Full keyboard support for all interactive elements
-- **Screen Reader Support**: ARIA labels and live regions for dynamic content
-- **Focus Management**: Clear focus indicators and logical tab order
-- **Color Contrast**: Text meets WCAG AA contrast requirements
+- **Semantic HTML**: Uses `<main>`, `<header>`, `<article>`, `<mark>` elements and proper heading hierarchy (`<h1>`)
+- **ARIA Landmarks & Labels**:
+    - `role="search"` on search container
+    - `role="region"` with `aria-label` on user list
+    - `role="status"` and `role="alert"` for dynamic feedback
+    - `aria-label` on all interactive elements (buttons, inputs)
+- **Live Regions**: `aria-live="polite"` for results count, loading states, and empty states; `aria-live="assertive"` for error alerts
+- **Keyboard Navigation**:
+    - `tabIndex={0}` on scrollable list for keyboard scrolling
+    - All buttons and inputs are keyboard accessible
+    - Clear focus indicators via CSS `:focus-visible`
+- **Screen Reader Support**:
+    - Descriptive `aria-label` attributes on user items, IDs, and emails
+    - `aria-hidden="true"` on decorative spinner elements
+    - `aria-busy="true"` during loading states
+- **Native HTML5 Features**: Uses `type="search"` input with native clear functionality
 - **Responsive Design**: Works across different screen sizes and zoom levels
 
 ## Tech Stack
@@ -120,17 +140,13 @@ Rendering 10,000+ items without optimization causes:
 
 **Problem**: Filtering on every keystroke causes lag with 10,000 items.
 
-**Solution**: Two-state pattern separates input responsiveness from filtering.
-
-```javascript
-const [searchQuery, setSearchQuery] = useState(""); // Instant UI update
-const debouncedQuery = useDebounce(searchQuery, 300); // Delayed filtering
-```
+**Solution**: Two-state pattern separates input responsiveness from filtering, with synchronized state resets.
 
 **Why this approach**:
 
 - Input updates immediately (no typing lag)
 - Filtering only runs after 300ms pause
+- Display count resets in sync with filtered results (prevents empty list bug)
 - No external libraries (lodash/underscore)
 - Reduces filtering operations by 10x
 

@@ -1,11 +1,12 @@
 import React, { useMemo } from "react";
-import { generateKey } from "../../utils";
+import { escapeRegExp, generateKey } from "../../utils";
 import "./index.css";
 
 const HighlightText = React.memo(({ text, highlight }) => {
     const parts = useMemo(() => {
         if (!highlight?.trim() || !text) return null;
-        const regex = new RegExp(`(${highlight})`, "gi");
+        const safeHighlight = escapeRegExp(highlight);
+        const regex = new RegExp(`(${safeHighlight})`, "gi");
 
         return text.split(regex).filter(Boolean);
     }, [text, highlight]);

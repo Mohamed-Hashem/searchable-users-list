@@ -10,7 +10,7 @@ const ErrorState = ({ message, onRetry }) => {
             <div className="errorTitle">Failed to load users</div>
             {truncatedMessage && <div className="errorMessage">{truncatedMessage}</div>}
             {onRetry && (
-                <button onClick={onRetry} className="retryButton" aria-label="Retry loading users">
+                <button type="button" onClick={onRetry} className="retryButton" aria-label="Retry loading users">
                     Try Again
                 </button>
             )}

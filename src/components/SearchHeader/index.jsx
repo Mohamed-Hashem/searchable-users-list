@@ -11,6 +11,7 @@ const SearchHeader = ({ displayedCount = 0, totalCount = 0, isLoading = false, o
                         <strong>{totalCount.toLocaleString()}</strong> Results
                     </span>
                     <button
+                        type="button"
                         onClick={onRefresh}
                         className={`searchHeaderRefreshButton ${isLoading ? "loading" : ""}`}
                         title="Refresh data"

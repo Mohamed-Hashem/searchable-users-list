@@ -8,11 +8,14 @@ const useFetchWithCache = (url) => {
     const [error, setError] = useState(null);
 
     const abortControllerRef = useRef(null);
+    const requestIdRef = useRef(0);
 
     const fetchData = useCallback(
         async (bypassCache = false) => {
             if (!url) {
                 setLoading(false);
+                setData(null);
+                setError(null);
                 return;
             }
 
@@ -32,6 +35,7 @@ const useFetchWithCache = (url) => {
                 abortControllerRef.current.abort(); // cancel any ongoing request
             }
             abortControllerRef.current = new AbortController();
+            const requestId = ++requestIdRef.current;
 
             setLoading(true);
             setError(null);
@@ -46,12 +50,15 @@ const useFetchWithCache = (url) => {
                 }
 
                 const result = await response.json();
+                if (requestId !== requestIdRef.current) return;
                 cacheMap.set(url, result);
                 setData(result);
             } catch (err) {
                 if (err.name === "AbortError") return;
+                if (requestId !== requestIdRef.current) return;
                 setError(err.message || "An error occurred");
             } finally {
+                if (requestId !== requestIdRef.current) return;
                 setLoading(false);
             }
         },

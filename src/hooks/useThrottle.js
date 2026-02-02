@@ -1,9 +1,14 @@
 import { useCallback, useEffect, useRef } from "react";
 
 const useThrottle = (callback, delay) => {
+    const callbackRef = useRef(callback);
     const lastCallRef = useRef(0);
     const lastArgsRef = useRef(null);
     const timeoutRef = useRef(null);
+
+    useEffect(() => {
+        callbackRef.current = callback;
+    }, [callback]);
 
     useEffect(() => {
         return () => {
@@ -23,17 +28,17 @@ const useThrottle = (callback, delay) => {
 
             if (timeSinceLastCall >= delay) {
                 lastCallRef.current = now;
-                callback(...args);
+                callbackRef.current(...args);
             } else if (!timeoutRef.current) {
                 const remainingTime = delay - timeSinceLastCall;
                 timeoutRef.current = setTimeout(() => {
                     lastCallRef.current = Date.now();
-                    callback(...lastArgsRef.current);
+                    callbackRef.current(...lastArgsRef.current);
                     timeoutRef.current = null;
                 }, remainingTime);
             }
         },
-        [callback, delay]
+        [delay]
     );
 };
 
