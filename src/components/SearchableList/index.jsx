@@ -10,6 +10,38 @@ import LoadingState from "../LoadingState";
 import ErrorState from "../ErrorState";
 import "./index.css";
 
+const ListContent = ({
+    loading,
+    error,
+    allUsers,
+    listRef,
+    displayedUsers,
+    searchQuery,
+    hasMore,
+    isLoadingMore,
+    onLoadMore,
+    onRetry,
+}) => {
+    if (loading && allUsers.length === 0) {
+        return <LoadingState />;
+    }
+
+    if (error && allUsers.length === 0) {
+        return <ErrorState message={error} onRetry={onRetry} />;
+    }
+
+    return (
+        <UserList
+            ref={listRef}
+            users={displayedUsers}
+            searchQuery={searchQuery}
+            hasMore={hasMore}
+            isLoadingMore={isLoadingMore}
+            onLoadMore={onLoadMore}
+        />
+    );
+};
+
 const SearchableList = () => {
     const [searchQuery, setSearchQuery] = useState("");
     const [displayCount, setDisplayCount] = useState(INITIAL_DISPLAY_COUNT);
@@ -31,14 +63,6 @@ const SearchableList = () => {
         }
     }, []);
 
-    useEffect(() => {
-        resetDisplayState();
-
-        if (listRef.current) {
-            listRef.current.scrollToTop();
-        }
-    }, [debouncedQuery, resetDisplayState]);
-
     const filteredUsers = useMemo(() => {
         const trimmedQuery = debouncedQuery.trim();
         if (!trimmedQuery) return allUsers;
@@ -54,22 +78,35 @@ const SearchableList = () => {
 
     const hasMore = displayCount < filteredUsers.length;
 
-    const handleSearchChange = useCallback((e) => {
-        setSearchQuery(e.target.value);
-    }, []);
+    const handleSearchChange = useCallback(
+        (e) => {
+            setSearchQuery(e.target.value);
+            resetDisplayState();
+
+            if (listRef.current) {
+                listRef.current.scrollToTop();
+            }
+        },
+        [resetDisplayState]
+    );
 
     const handleClearSearch = useCallback(() => {
         setSearchQuery("");
-    }, []);
+        resetDisplayState();
+
+        if (listRef.current) {
+            listRef.current.scrollToTop();
+        }
+    }, [resetDisplayState]);
 
     const handleLoadMore = useCallback(() => {
         if (isLoadingMore || !hasMore) return;
         setIsLoadingMore(true);
         loadingTimeoutRef.current = setTimeout(() => {
-            setDisplayCount((prev) => prev + LOAD_MORE_COUNT);
+            setDisplayCount((prev) => Math.min(prev + LOAD_MORE_COUNT, filteredUsers.length));
             setIsLoadingMore(false);
         }, LOAD_MORE_DELAY);
-    }, [hasMore, isLoadingMore]);
+    }, [hasMore, isLoadingMore, filteredUsers.length]);
 
     useEffect(() => {
         return () => {
@@ -81,33 +118,16 @@ const SearchableList = () => {
     }, []);
 
     const handleRefresh = useCallback(() => {
+        if (loadingTimeoutRef.current) {
+            clearTimeout(loadingTimeoutRef.current);
+            loadingTimeoutRef.current = null;
+        }
         if (listRef.current) {
             listRef.current.scrollToTop();
         }
         resetDisplayState();
         refetch();
     }, [resetDisplayState, refetch]);
-
-    const renderContent = () => {
-        if (data === null) {
-            return <LoadingState />;
-        }
-
-        if (error && allUsers.length === 0) {
-            return <ErrorState message={error} onRetry={refetch} />;
-        }
-
-        return (
-            <UserList
-                ref={listRef}
-                users={displayedUsers}
-                searchQuery={debouncedQuery}
-                hasMore={hasMore}
-                isLoadingMore={isLoadingMore}
-                onLoadMore={handleLoadMore}
-            />
-        );
-    };
 
     return (
         <main className="searchableListContainer" aria-label="Searchable user list application">
@@ -118,9 +138,20 @@ const SearchableList = () => {
                 onRefresh={handleRefresh}
             />
 
-            <SearchInput value={searchQuery} onChange={handleSearchChange} onClear={handleClearSearch} autoFocus />
+            <SearchInput value={searchQuery} onChange={handleSearchChange} onClear={handleClearSearch} />
 
-            {renderContent()}
+            <ListContent
+                loading={loading}
+                error={error}
+                allUsers={allUsers}
+                listRef={listRef}
+                displayedUsers={displayedUsers}
+                searchQuery={debouncedQuery}
+                hasMore={hasMore}
+                isLoadingMore={isLoadingMore}
+                onLoadMore={handleLoadMore}
+                onRetry={refetch}
+            />
         </main>
     );
 };

@@ -58,8 +58,9 @@ const useFetchWithCache = (url) => {
                 if (requestId !== requestIdRef.current) return;
                 setError(err.message || "An error occurred");
             } finally {
-                if (requestId !== requestIdRef.current) return;
-                setLoading(false);
+                if (requestId === requestIdRef.current) {
+                    setLoading(false);
+                }
             }
         },
         [url]

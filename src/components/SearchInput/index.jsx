@@ -1,7 +1,7 @@
 import { MAX_SEARCH_LENGTH } from "../../constants";
 import "./index.css";
 
-const SearchInput = ({ value, onChange, onClear, autoFocus = false }) => {
+const SearchInput = ({ value, onChange, onClear }) => {
     return (
         <div className="searchInputContainer" role="search">
             <div className="searchInputWrapper">
@@ -12,7 +12,6 @@ const SearchInput = ({ value, onChange, onClear, autoFocus = false }) => {
                     onChange={onChange}
                     className="searchInput"
                     maxLength={MAX_SEARCH_LENGTH}
-                    autoFocus={autoFocus}
                     aria-label="Search users by name"
                 />
                 {value && (

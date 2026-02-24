@@ -40,12 +40,18 @@ A React application implementing a high-performance searchable list with 10,000+
 
 ## Recent Improvements
 
+- **Extracted `ListContent` component**: Replaced inline `renderContent()` function with a dedicated `ListContent` component for proper React reconciliation and cleaner architecture.
+- **Accessibility fix**: Removed `autoFocus` attribute from `SearchInput` to prevent usability issues for sighted and non-sighted users.
+- **Load-more bounds safety**: `handleLoadMore` now caps `displayCount` with `Math.min(prev + LOAD_MORE_COUNT, filteredUsers.length)` and includes `filteredUsers.length` in its dependency array to prevent stale closures.
+- **Refresh race condition fix**: `handleRefresh` explicitly clears any pending load-more timeout before resetting state and refetching, preventing stale callbacks from corrupting state after fresh data arrives.
+- **Fetch safety**: Fixed `no-unsafe-finally` ESLint error in `useFetchWithCache` by replacing a `return` inside `finally` with a conditional guard.
 - **Search stability**: Display count resets in sync with the debounced query to prevent empty list flicker while editing search text.
 - **Safer highlighting**: Escapes search text before building the highlight matcher to avoid regex-related issues.
 - **Fetch robustness**: Prevents stale requests from overwriting newer data and handles empty URLs safely.
 - **Button safety**: Explicit `type="button"` on non-submit buttons to avoid accidental form submits.
 - **Throttle stability**: Uses ref pattern to avoid stale callback closures in the throttle hook.
 - **DevTools support**: Added `displayName` to all memoized and forwarded-ref components for easier debugging.
+- **Code quality**: Prettier formatting and ESLint auto-fix applied across all source files (React Doctor score: 100/100).
 
 ## Accessibility
 
